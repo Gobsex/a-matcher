@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 @Builder
@@ -22,7 +21,7 @@ public class StringComboComparator implements Comparator<SimilarityRecord<String
     @Builder.Default
     private boolean compareIgnoreCase = true;
     @Builder.Default
-    private String spitBy = " ";
+    private String separator = " ";
     @Builder.Default
     private boolean distinctWords = false;
     @Builder.Default
@@ -33,16 +32,18 @@ public class StringComboComparator implements Comparator<SimilarityRecord<String
     private ComparingAlgorithm comparingAlgorithm = ComparingAlgorithm.RATCLIFF_OBERSHELP;
     @Builder.Default
     private Double similarityThreshold = null;
+    @Builder.Default
+    private Integer minWordLength = null;
 
     @Override
     public SimilarityRecord<String> compare(String source, String target) {
         SimilarityRecord<String> record = new SimilarityRecord<>(source, target, 0);
         if (source == null || target == null) {
-            return new SimilarityRecord<>(source, target, 0);
+            return record;
         }
         if (normalizeSpaces) {
-            source = source.replaceAll(spitBy + "+", spitBy).trim();
-            target = target.replaceAll(spitBy + "+", spitBy).trim();
+            source = source.replaceAll(separator + "+", separator).trim();
+            target = target.replaceAll(separator + "+", separator).trim();
         }
         if (compareIgnoreCase) {
             source = source.toLowerCase();
@@ -54,14 +55,28 @@ public class StringComboComparator implements Comparator<SimilarityRecord<String
     }
 
     public List<String> splitToWords(String str) {
-        Stream<String> stream = Arrays.stream(str.split(spitBy)).filter(x -> {
+        List<String> collect = Arrays.stream(str.split(separator)).filter(x -> {
             if (skipWordsPattern != null) {
                 return !x.matches(skipWordsPattern);
             }
             return true;
-        });
-        if (distinctWords) stream = stream.distinct();
-        return stream.collect(Collectors.toList());
+        }).collect(Collectors.toList());
+        // join words with length less than minWordLength to previous word
+        if (minWordLength != null) {
+            for (int i = 0; i < collect.size(); i++) {
+                if (collect.get(i).length() < minWordLength) {
+                    if (i > 0) {
+                        collect.set(i - 1, collect.get(i - 1) + separator + collect.get(i));
+                        collect.remove(i);
+                        i--;
+                    }
+                }
+            }
+        }
+        if (distinctWords) {
+            collect = collect.stream().distinct().collect(Collectors.toList());
+        }
+        return collect;
     }
 
     public double compareForCommonWords(String s1, String s2) {
