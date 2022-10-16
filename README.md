@@ -1,6 +1,15 @@
 # Overview
 This library provide flexible functionality to compare and match strings. 
 It is based on a lot of comparing algorithms and can be used to find similar strings in a list of strings.
+# Installation
+## Maven
+```xml
+<dependency>
+  <groupId>io.github.gobsex</groupId>
+  <artifactId>a-matcher</artifactId>
+  <version>1.1.1</version>
+</dependency>
+```
 # Usage
 ## String Matcher
 ### Configuration (example)
