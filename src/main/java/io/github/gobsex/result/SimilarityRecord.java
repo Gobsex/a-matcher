@@ -1,4 +1,4 @@
-package result;
+package io.github.gobsex.result;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

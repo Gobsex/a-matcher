@@ -1,13 +1,13 @@
-package matcher;
+package io.github.gobsex.matcher;
 
-import comparator.StringComboComparator;
-import comparator.Comparator;
-import filter.ThresholdFilter;
+import io.github.gobsex.comparators.StringComboComparator;
+import io.github.gobsex.comparators.Comparator;
+import io.github.gobsex.filter.ThresholdFilter;
+import io.github.gobsex.result.SimilarityRecord;
+import io.github.gobsex.result.SimilarityResult;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import result.SimilarityRecord;
-import result.SimilarityResult;
 
 import java.util.Collection;
 import java.util.List;

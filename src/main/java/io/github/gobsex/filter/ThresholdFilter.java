@@ -1,6 +1,6 @@
-package filter;
+package io.github.gobsex.filter;
 
-import result.SimilarityRecord;
+import io.github.gobsex.result.SimilarityRecord;
 
 public class ThresholdFilter implements Filter<SimilarityRecord<?>> {
     private final double threshold;

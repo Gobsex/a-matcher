@@ -1,4 +1,4 @@
-package matcher;
+package io.github.gobsex.matcher;
 
 import java.util.Collection;
 

@@ -1,10 +1,10 @@
-package comparator;
+package io.github.gobsex.comparators;
 
-import comparator.strategy.ComparingAlgorithm;
-import comparator.strategy.WordsComparingStrategy;
+import io.github.gobsex.comparators.strategy.ComparingAlgorithm;
+import io.github.gobsex.comparators.strategy.WordsComparingStrategy;
 import info.debatty.java.stringsimilarity.*;
+import io.github.gobsex.result.SimilarityRecord;
 import lombok.Builder;
-import result.SimilarityRecord;
 
 import java.util.Arrays;
 import java.util.List;
@@ -97,29 +97,59 @@ public class StringComboComparator implements Comparator<SimilarityRecord<String
                     coefficient = compareCoefficient;
                 }
             }
-            int totalChars = switch (wordsComparingStrategy) {
-                case RIGHT -> totalChars2;
-                case AVERAGE -> (totalChars1 + totalChars2) / 2;
-                case MAX -> Math.max(totalChars1, totalChars2);
-                case LEFT -> totalChars1;
-            };
+            int totalChars;
+            switch (wordsComparingStrategy) {
+                case RIGHT:
+                    totalChars = totalChars2;
+                    break;
+                case AVERAGE:
+                    totalChars = (totalChars1 + totalChars2) / 2;
+                    break;
+                case MAX:
+                    totalChars = Math.max(totalChars1, totalChars2);
+                    break;
+                case LEFT:
+                    totalChars = totalChars1;
+                    break;
+                default:
+                    throw new IllegalArgumentException();
+            }
             coefficientSum += coefficient * word1.length() / totalChars;
         }
         return Math.min(1, coefficientSum);
     }
 
     public double compareString(String s1, String s2) {
-        double similarity = switch (comparingAlgorithm) {
-            case JARO_WINKLER -> new JaroWinkler().similarity(s1, s2);
-            case JACCARD -> new Jaccard().similarity(s1, s2);
-            case COSINE -> new Cosine().similarity(s1, s2);
-            case LEVENSHTEIN -> new Levenshtein().distance(s1, s2, 1);
-            case NGRAM -> new NGram().distance(s1, s2);
-            case SORENSEN_DICE -> new SorensenDice().similarity(s1, s2);
-            case RATCLIFF_OBERSHELP -> new RatcliffObershelp().similarity(s1, s2);
-            case EQUALS -> Objects.equals(s1, s2) ? 1 : 0;
-            default -> 0;
-        };
+        double similarity;
+        switch (comparingAlgorithm) {
+            case JARO_WINKLER:
+                similarity = new JaroWinkler().similarity(s1, s2);
+                break;
+            case JACCARD:
+                similarity = new Jaccard().similarity(s1, s2);
+                break;
+            case COSINE:
+                similarity = new Cosine().similarity(s1, s2);
+                break;
+            case LEVENSHTEIN:
+                similarity = new Levenshtein().distance(s1, s2, 1);
+                break;
+            case NGRAM:
+                similarity = new NGram().distance(s1, s2);
+                break;
+            case SORENSEN_DICE:
+                similarity = new SorensenDice().similarity(s1, s2);
+                break;
+            case RATCLIFF_OBERSHELP:
+                similarity = new RatcliffObershelp().similarity(s1, s2);
+                break;
+            case EQUALS:
+                similarity = Objects.equals(s1, s2) ? 1 : 0;
+                break;
+            default:
+                similarity = 0;
+                break;
+        }
         if (similarityThreshold != null) {
             return similarityThreshold <= similarity ? similarity : 0;
         }

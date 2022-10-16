@@ -1,7 +1,7 @@
-package comparator;
+package io.github.gobsex.comparators;
 
+import io.github.gobsex.result.SimilarityRecord;
 import org.apache.commons.lang3.StringUtils;
-import result.SimilarityRecord;
 
 public class StringJaroWinklerComparator implements Comparator<SimilarityRecord<String>, String> {
     @Override
