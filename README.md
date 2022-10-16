@@ -10,6 +10,10 @@ It is based on a lot of comparing algorithms and can be used to find similar str
   <version>1.1.1</version>
 </dependency>
 ```
+## Gradle
+```groovy
+implementation 'io.github.gobsex:a-matcher:1.1.1'
+```
 # Usage
 ## String Matcher
 ### Configuration (example)
